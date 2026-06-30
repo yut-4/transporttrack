@@ -1,4 +1,4 @@
-namespace transporttrack.DTOs;
+namespace TransportTrack.Infrastructure.Models;
 
 public class ConductorDto
 {

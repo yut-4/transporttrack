@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using TransportTrack.Domain.Core;
 
-namespace transporttrack.DTOs;
+namespace TransportTrack.Domain.Entities;
 
-public class ActualizarConductorDto
+public class Conductor : BaseEntity
 {
     [Required]
     [MaxLength(100)]
@@ -14,4 +15,6 @@ public class ActualizarConductorDto
 
     [MaxLength(20)]
     public string Telefono { get; set; } = string.Empty;
+
+    public ICollection<Vehiculo> Vehiculos { get; set; } = new List<Vehiculo>();
 }

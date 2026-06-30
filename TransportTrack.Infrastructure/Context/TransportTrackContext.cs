@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using transporttrack.Models;
+using TransportTrack.Domain.Entities;
 
-namespace transporttrack.Context;
+namespace TransportTrack.Infrastructure.Context;
 
 public class TransportTrackContext : DbContext
 {

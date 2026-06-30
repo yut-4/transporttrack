@@ -1,26 +1,18 @@
-using System.ComponentModel.DataAnnotations;
+namespace TransportTrack.Infrastructure.Models;
 
-namespace transporttrack.Models;
-
-public class Vehiculo
+public class VehiculoDto
 {
     public int Id { get; set; }
 
-    [Required]
-    [MaxLength(20)]
     public string Placa { get; set; } = string.Empty;
 
-    [Required]
-    [MaxLength(60)]
     public string Marca { get; set; } = string.Empty;
 
-    [Required]
-    [MaxLength(60)]
     public string Modelo { get; set; } = string.Empty;
 
     public int Anio { get; set; }
 
     public int ConductorId { get; set; }
 
-    public Conductor? Conductor { get; set; }
+    public string? NombreConductor { get; set; }
 }

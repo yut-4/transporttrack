@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace transporttrack.DTOs;
+namespace TransportTrack.Infrastructure.Models;
 
-public class CrearVehiculoDto
+public class VehiculoModel
 {
     [Required]
     [MaxLength(20)]

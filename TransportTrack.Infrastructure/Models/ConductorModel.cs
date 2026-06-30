@@ -1,11 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace transporttrack.Models;
+namespace TransportTrack.Infrastructure.Models;
 
-public class Conductor
+public class ConductorModel
 {
-    public int Id { get; set; }
-
     [Required]
     [MaxLength(100)]
     public string Nombre { get; set; } = string.Empty;
@@ -16,6 +14,4 @@ public class Conductor
 
     [MaxLength(20)]
     public string Telefono { get; set; } = string.Empty;
-
-    public ICollection<Vehiculo> Vehiculos { get; set; } = new List<Vehiculo>();
 }

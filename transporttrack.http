@@ -1,6 +1,0 @@
-@transporttrack_HostAddress = http://localhost:0
-
-GET {{transporttrack_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

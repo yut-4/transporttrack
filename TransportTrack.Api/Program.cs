@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using transporttrack.Context;
+using TransportTrack.Infrastructure.Context;
+using TransportTrack.Infrastructure.Interfaces;
+using TransportTrack.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "Data Source=transporttrack.db";
@@ -11,8 +11,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<TransportTrackContext>(options =>
     options.UseSqlite(connectionString));
 
+builder.Services.AddScoped<IConductorRepository, ConductorRepository>();
+builder.Services.AddScoped<IVehiculoRepository, VehiculoRepository>();
+
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -24,7 +26,6 @@ using (var scope = app.Services.CreateScope())
     context.Database.EnsureCreated();
 }
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

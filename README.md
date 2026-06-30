@@ -1,6 +1,43 @@
 # TransportTrack
 
-CRUD Web API en ASP.NET Core con Controllers, DTOs, Entity Framework Core y SQLite.
+CRUD Web API en ASP.NET Core con arquitectura por capas, repositorios, Entity Framework Core y SQLite.
+
+## Estructura
+
+```txt
+TransportTrack.Domain
+├── Core
+│   └── BaseEntity.cs
+└── Entities
+    ├── Conductor.cs
+    └── Vehiculo.cs
+
+TransportTrack.Infrastructure
+├── Context
+│   └── TransportTrackContext.cs
+├── Core
+│   └── BaseRepository.cs
+├── Exceptions
+│   ├── ConductorException.cs
+│   └── VehiculoException.cs
+├── Interfaces
+│   ├── IConductorRepository.cs
+│   └── IVehiculoRepository.cs
+├── Models
+│   ├── ConductorDto.cs
+│   ├── ConductorModel.cs
+│   ├── VehiculoDto.cs
+│   └── VehiculoModel.cs
+└── Repositories
+    ├── ConductorRepository.cs
+    └── VehiculoRepository.cs
+
+TransportTrack.Api
+├── Controllers
+│   ├── ConductoresController.cs
+│   └── VehiculosController.cs
+└── Program.cs
+```
 
 ## Entidades
 
@@ -12,9 +49,9 @@ Cada vehiculo pertenece a un conductor.
 ## Ejecutar
 
 ```bash
-cp appsettings.example.json appsettings.json
+cp TransportTrack.Api/appsettings.example.json TransportTrack.Api/appsettings.json
 dotnet restore
-dotnet run
+dotnet run --project TransportTrack.Api
 ```
 
 La base de datos SQLite se crea automaticamente como `transporttrack.db` al iniciar la API. El archivo `appsettings.json` no se sube al repositorio para evitar publicar claves o cadenas de conexion reales.
