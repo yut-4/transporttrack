@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using TransportTrack.Application.Contract;
+using TransportTrack.Application.Services;
 using TransportTrack.Infrastructure.Context;
 using TransportTrack.Infrastructure.Interfaces;
 using TransportTrack.Infrastructure.Repositories;
@@ -13,6 +15,10 @@ builder.Services.AddDbContext<TransportTrackContext>(options =>
 
 builder.Services.AddScoped<IConductorRepository, ConductorRepository>();
 builder.Services.AddScoped<IVehiculoRepository, VehiculoRepository>();
+builder.Services.AddScoped<IRutaRepository, RutaRepository>();
+builder.Services.AddScoped<IConductorService, ConductorService>();
+builder.Services.AddScoped<IVehicleService, VehicleService>();
+builder.Services.AddScoped<IRouteService, RouteService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

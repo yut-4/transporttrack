@@ -1,87 +1,41 @@
 using Microsoft.AspNetCore.Mvc;
-using TransportTrack.Domain.Entities;
+using TransportTrack.Application.Contract;
+using TransportTrack.Application.Dtos.Conductor;
 using TransportTrack.Infrastructure.Exceptions;
-using TransportTrack.Infrastructure.Interfaces;
-using TransportTrack.Infrastructure.Models;
 
 namespace TransportTrack.Api.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-public class ConductoresController : ControllerBase
+[ApiController, Route("api/[controller]")]
+public sealed class ConductoresController(IConductorService service) : ControllerBase
 {
-    private readonly IConductorRepository _conductorRepository;
-
-    public ConductoresController(IConductorRepository conductorRepository)
-    {
-        _conductorRepository = conductorRepository;
-    }
-
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ConductorDto>>> GetConductores()
-    {
-        var conductores = await _conductorRepository.GetAllAsync();
-        return Ok(conductores.Select(ToDto));
-    }
+    public async Task<ActionResult<IEnumerable<ConductorDto>>> GetAll() => Ok(await service.GetAllAsync());
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<ConductorDto>> GetConductor(int id)
+    public async Task<ActionResult<ConductorDto>> GetById(int id)
     {
-        var conductor = await _conductorRepository.GetByIdAsync(id);
-
-        if (conductor is null)
-        {
-            return NotFound();
-        }
-
-        return Ok(ToDto(conductor));
+        var result = await service.GetByIdAsync(id);
+        return result is null ? NotFound() : Ok(result);
     }
 
     [HttpPost]
-    public async Task<ActionResult<ConductorDto>> CrearConductor(ConductorModel model)
+    public async Task<ActionResult<ConductorDto>> Create(CreateConductorDto dto)
     {
-        var conductor = await _conductorRepository.AddAsync(model);
-        var conductorDto = ToDto(conductor);
-
-        return CreatedAtAction(nameof(GetConductor), new { id = conductor.Id }, conductorDto);
+        var result = await service.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> ActualizarConductor(int id, ConductorModel model)
+    public async Task<IActionResult> Update(int id, UpdateConductorDto dto)
     {
-        try
-        {
-            await _conductorRepository.UpdateAsync(id, model);
-            return NoContent();
-        }
-        catch (ConductorException exception)
-        {
-            return NotFound(exception.Message);
-        }
+        try { await service.UpdateAsync(id, dto); return NoContent(); }
+        catch (ConductorException exception) { return NotFound(exception.Message); }
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> EliminarConductor(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        try
-        {
-            await _conductorRepository.DeleteAsync(id);
-            return NoContent();
-        }
-        catch (ConductorException exception)
-        {
-            return BadRequest(exception.Message);
-        }
-    }
-
-    private static ConductorDto ToDto(Conductor conductor)
-    {
-        return new ConductorDto
-        {
-            Id = conductor.Id,
-            Nombre = conductor.Nombre,
-            Licencia = conductor.Licencia,
-            Telefono = conductor.Telefono
-        };
+        try { await service.DeleteAsync(id); return NoContent(); }
+        catch (ConductorException exception) { return BadRequest(exception.Message); }
     }
 }
