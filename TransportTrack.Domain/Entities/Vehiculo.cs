@@ -22,4 +22,29 @@ public class Vehiculo : BaseEntity
     public int ConductorId { get; set; }
 
     public Conductor? Conductor { get; set; }
+
+    public Vehiculo() : base()
+    {
+    }
+
+    public Vehiculo(string placa, string marca, string modelo, int anio, int conductorId) : base()
+    {
+        Placa = placa;
+        Marca = marca;
+        Modelo = modelo;
+        Anio = anio;
+        ConductorId = conductorId;
+    }
+
+    public Vehiculo(int id, string placa, string marca, string modelo, int anio, int conductorId, DateTime createdAt, bool isDeleted = false)
+        : base(createdAt)
+    {
+        Id = id;
+        Placa = placa;
+        Marca = marca;
+        Modelo = modelo;
+        Anio = anio;
+        ConductorId = conductorId;
+        IsDeleted = isDeleted;
+    }
 }

@@ -35,6 +35,12 @@ public class TransportTrackContext : DbContext
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Ruta>()
+            .HasOne(ruta => ruta.Conductor)
+            .WithMany()
+            .HasForeignKey(ruta => ruta.ConductorId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Ruta>()
             .HasOne(ruta => ruta.Vehiculo)
             .WithMany()
             .HasForeignKey(ruta => ruta.VehiculoId)

@@ -1,48 +1,58 @@
-using TransportTrack.Application.Contract;
-using TransportTrack.Application.Dtos.Conductor;
+using TransportTrack.Application.Core;
+using TransportTrack.Application.Interfaces;
+using TransportTrack.Domain.Entities;
+using TransportTrack.Infrastructure.Core;
+using TransportTrack.Infrastructure.Exceptions;
 using TransportTrack.Infrastructure.Interfaces;
 using TransportTrack.Infrastructure.Models;
 
 namespace TransportTrack.Application.Services;
 
-public sealed class ConductorService(IConductorRepository repository) : IConductorService
+public class ConductorService : ServiceBase<Conductor>, IConductorService
 {
-    public async Task<IReadOnlyList<ConductorDto>> GetAllAsync() =>
-        (await repository.GetAllAsync()).Select(Map).ToList();
+    private readonly IConductorRepository _conductorRepository;
 
-    public async Task<ConductorDto?> GetByIdAsync(int id)
+    public ConductorService(IConductorRepository conductorRepository)
+        : base(conductorRepository as BaseRepository<Conductor> ?? throw new InvalidOperationException("Invalid repository type"))
     {
-        ServiceValidation.ValidateId(id);
-        var entity = await repository.GetByIdAsync(id);
-        return entity is null ? null : Map(entity);
+        _conductorRepository = conductorRepository;
     }
 
-    public async Task<ConductorDto> CreateAsync(CreateConductorDto dto)
+    public async Task<Conductor> CreateAsync(ConductorModel model)
     {
-        ServiceValidation.Validate(dto);
-        return Map(await repository.AddAsync(ToModel(dto)));
+        var conductorExistente = await _conductorRepository.GetAllAsync();
+        if (conductorExistente.Any(c => c.Licencia == model.Licencia))
+        {
+            throw new ConductorException("Ya existe un conductor con la licencia indicada.");
+        }
+
+        return await _conductorRepository.AddAsync(model);
     }
 
-    public async Task UpdateAsync(int id, UpdateConductorDto dto)
+    public async Task UpdateAsync(int id, ConductorModel model)
     {
-        ServiceValidation.ValidateId(id);
-        ServiceValidation.Validate(dto);
-        await repository.UpdateAsync(id, ToModel(dto));
+        var conductores = await _conductorRepository.GetAllAsync();
+        var conductorExistente = conductores.FirstOrDefault(c => c.Licencia == model.Licencia && c.Id != id);
+        if (conductorExistente is not null)
+        {
+            throw new ConductorException("Ya existe otro conductor con la licencia indicada.");
+        }
+
+        await _conductorRepository.UpdateAsync(id, model);
     }
 
-    public async Task DeleteAsync(int id)
+    async Task<Conductor?> IConductorService.GetByIdAsync(int id)
     {
-        ServiceValidation.ValidateId(id);
-        await repository.DeleteAsync(id);
+        return await _conductorRepository.GetByIdAsync(id);
     }
 
-    private static ConductorDto Map(TransportTrack.Domain.Entities.Conductor value) => new()
+    async Task<List<Conductor>> IConductorService.GetAllAsync()
     {
-        Id = value.Id, Nombre = value.Nombre, Licencia = value.Licencia, Telefono = value.Telefono
-    };
+        return await _conductorRepository.GetAllAsync();
+    }
 
-    private static ConductorModel ToModel(CreateConductorDto value) => new()
+    async Task IConductorService.DeleteAsync(int id)
     {
-        Nombre = value.Nombre.Trim(), Licencia = value.Licencia.Trim(), Telefono = value.Telefono.Trim()
-    };
+        await _conductorRepository.DeleteAsync(id);
+    }
 }

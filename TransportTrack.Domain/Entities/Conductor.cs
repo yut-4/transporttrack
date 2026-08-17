@@ -17,4 +17,25 @@ public class Conductor : BaseEntity
     public string Telefono { get; set; } = string.Empty;
 
     public ICollection<Vehiculo> Vehiculos { get; set; } = new List<Vehiculo>();
+
+    public Conductor() : base()
+    {
+    }
+
+    public Conductor(string nombre, string licencia, string telefono = "") : base()
+    {
+        Nombre = nombre;
+        Licencia = licencia;
+        Telefono = telefono;
+    }
+
+    public Conductor(int id, string nombre, string licencia, string telefono, DateTime createdAt, bool isDeleted = false)
+        : base(createdAt)
+    {
+        Id = id;
+        Nombre = nombre;
+        Licencia = licencia;
+        Telefono = telefono;
+        IsDeleted = isDeleted;
+    }
 }

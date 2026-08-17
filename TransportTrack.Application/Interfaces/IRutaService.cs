@@ -1,17 +1,13 @@
 using TransportTrack.Domain.Entities;
 using TransportTrack.Infrastructure.Models;
 
-namespace TransportTrack.Infrastructure.Interfaces;
+namespace TransportTrack.Application.Interfaces;
 
-public interface IRutaRepository
+public interface IRutaService
 {
     Task<List<Ruta>> GetAllAsync();
-
     Task<Ruta?> GetByIdAsync(int id);
-
-    Task<Ruta> AddAsync(RutaModel model);
-
+    Task<Ruta> CreateAsync(RutaModel model);
     Task UpdateAsync(int id, RutaModel model);
-
     Task DeleteAsync(int id);
 }
