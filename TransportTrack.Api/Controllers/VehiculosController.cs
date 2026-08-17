@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using TransportTrack.Application.Interfaces;
 using TransportTrack.Domain.Entities;
 using TransportTrack.Infrastructure.Exceptions;
-using TransportTrack.Infrastructure.Interfaces;
 using TransportTrack.Infrastructure.Models;
 
 namespace TransportTrack.Api.Controllers;
@@ -10,24 +10,24 @@ namespace TransportTrack.Api.Controllers;
 [Route("api/[controller]")]
 public class VehiculosController : ControllerBase
 {
-    private readonly IVehiculoRepository _vehiculoRepository;
+    private readonly IVehiculoService _vehiculoService;
 
-    public VehiculosController(IVehiculoRepository vehiculoRepository)
+    public VehiculosController(IVehiculoService vehiculoService)
     {
-        _vehiculoRepository = vehiculoRepository;
+        _vehiculoService = vehiculoService;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<VehiculoDto>>> GetVehiculos()
     {
-        var vehiculos = await _vehiculoRepository.GetAllAsync();
+        var vehiculos = await _vehiculoService.GetAllAsync();
         return Ok(vehiculos.Select(ToDto));
     }
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<VehiculoDto>> GetVehiculo(int id)
     {
-        var vehiculo = await _vehiculoRepository.GetByIdAsync(id);
+        var vehiculo = await _vehiculoService.GetByIdAsync(id);
 
         if (vehiculo is null)
         {
@@ -42,12 +42,16 @@ public class VehiculosController : ControllerBase
     {
         try
         {
-            var vehiculo = await _vehiculoRepository.AddAsync(model);
+            var vehiculo = await _vehiculoService.CreateAsync(model);
             var vehiculoDto = ToDto(vehiculo);
 
             return CreatedAtAction(nameof(GetVehiculo), new { id = vehiculo.Id }, vehiculoDto);
         }
         catch (ConductorException exception)
+        {
+            return BadRequest(exception.Message);
+        }
+        catch (VehiculoException exception)
         {
             return BadRequest(exception.Message);
         }
@@ -58,7 +62,7 @@ public class VehiculosController : ControllerBase
     {
         try
         {
-            await _vehiculoRepository.UpdateAsync(id, model);
+            await _vehiculoService.UpdateAsync(id, model);
             return NoContent();
         }
         catch (VehiculoException exception)
@@ -76,7 +80,7 @@ public class VehiculosController : ControllerBase
     {
         try
         {
-            await _vehiculoRepository.DeleteAsync(id);
+            await _vehiculoService.DeleteAsync(id);
             return NoContent();
         }
         catch (VehiculoException exception)

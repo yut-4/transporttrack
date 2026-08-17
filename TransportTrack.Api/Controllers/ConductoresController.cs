@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using TransportTrack.Application.Interfaces;
 using TransportTrack.Domain.Entities;
 using TransportTrack.Infrastructure.Exceptions;
-using TransportTrack.Infrastructure.Interfaces;
 using TransportTrack.Infrastructure.Models;
 
 namespace TransportTrack.Api.Controllers;
@@ -10,24 +10,24 @@ namespace TransportTrack.Api.Controllers;
 [Route("api/[controller]")]
 public class ConductoresController : ControllerBase
 {
-    private readonly IConductorRepository _conductorRepository;
+    private readonly IConductorService _conductorService;
 
-    public ConductoresController(IConductorRepository conductorRepository)
+    public ConductoresController(IConductorService conductorService)
     {
-        _conductorRepository = conductorRepository;
+        _conductorService = conductorService;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ConductorDto>>> GetConductores()
     {
-        var conductores = await _conductorRepository.GetAllAsync();
+        var conductores = await _conductorService.GetAllAsync();
         return Ok(conductores.Select(ToDto));
     }
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<ConductorDto>> GetConductor(int id)
     {
-        var conductor = await _conductorRepository.GetByIdAsync(id);
+        var conductor = await _conductorService.GetByIdAsync(id);
 
         if (conductor is null)
         {
@@ -40,10 +40,17 @@ public class ConductoresController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ConductorDto>> CrearConductor(ConductorModel model)
     {
-        var conductor = await _conductorRepository.AddAsync(model);
-        var conductorDto = ToDto(conductor);
+        try
+        {
+            var conductor = await _conductorService.CreateAsync(model);
+            var conductorDto = ToDto(conductor);
 
-        return CreatedAtAction(nameof(GetConductor), new { id = conductor.Id }, conductorDto);
+            return CreatedAtAction(nameof(GetConductor), new { id = conductor.Id }, conductorDto);
+        }
+        catch (ConductorException exception)
+        {
+            return BadRequest(exception.Message);
+        }
     }
 
     [HttpPut("{id:int}")]
@@ -51,7 +58,7 @@ public class ConductoresController : ControllerBase
     {
         try
         {
-            await _conductorRepository.UpdateAsync(id, model);
+            await _conductorService.UpdateAsync(id, model);
             return NoContent();
         }
         catch (ConductorException exception)
@@ -65,7 +72,7 @@ public class ConductoresController : ControllerBase
     {
         try
         {
-            await _conductorRepository.DeleteAsync(id);
+            await _conductorService.DeleteAsync(id);
             return NoContent();
         }
         catch (ConductorException exception)

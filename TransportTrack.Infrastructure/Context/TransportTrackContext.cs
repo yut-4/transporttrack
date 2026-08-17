@@ -14,6 +14,8 @@ public class TransportTrackContext : DbContext
 
     public DbSet<Vehiculo> Vehiculos { get; set; }
 
+    public DbSet<Ruta> Rutas { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -30,6 +32,18 @@ public class TransportTrackContext : DbContext
             .HasOne(vehiculo => vehiculo.Conductor)
             .WithMany(conductor => conductor.Vehiculos)
             .HasForeignKey(vehiculo => vehiculo.ConductorId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Ruta>()
+            .HasOne(ruta => ruta.Conductor)
+            .WithMany()
+            .HasForeignKey(ruta => ruta.ConductorId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Ruta>()
+            .HasOne(ruta => ruta.Vehiculo)
+            .WithMany()
+            .HasForeignKey(ruta => ruta.VehiculoId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

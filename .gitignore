@@ -1,12 +1,20 @@
+# ==== .NET ====
 bin/
 obj/
-
 *.user
 *.suo
 *.db
 *.db-shm
 *.db-wal
-
 appsettings.json
 appsettings.*.json
 !appsettings.example.json
+
+# ==== Node.js / React ====
+node_modules/
+dist/
+*.local
+.vite/
+.env
+.env.*
+!.env.example
