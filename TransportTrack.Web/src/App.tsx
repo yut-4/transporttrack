@@ -5,6 +5,7 @@ import Modal from './components/Modal';
 import ConductorSection from './components/ConductorSection';
 import VehiculoSection from './components/VehiculoSection';
 import RutaSection from './components/RutaSection';
+import GpsPage from './features/tracking/GpsPage';
 import { conductorApi, vehiculoApi, rutaApi } from './api/client';
 import { demoStore } from './api/demoStore';
 import type {
@@ -25,6 +26,7 @@ export default function App() {
   const [rutas, setRutas] = useState<RutaDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [demoMode, setDemoMode] = useState(false);
+  const [apiOnline, setApiOnline] = useState(false);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<EntityType>('conductor');
@@ -43,6 +45,7 @@ export default function App() {
       setVehiculos(vhs);
       setRutas(rt);
       setDemoMode(false);
+      setApiOnline(true);
     } catch {
       setConductores(demoStore.getConductores());
       setVehiculos(demoStore.getVehiculos());
@@ -53,8 +56,23 @@ export default function App() {
     }
   };
 
+  const checkHealth = async () => {
+    try {
+      const base = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/$/, '') ?? '';
+      const res = await fetch(base + '/api/health', { signal: AbortSignal.timeout(4000) });
+      if (res.ok) {
+        setApiOnline(true);
+        setDemoMode(false);
+      }
+    } catch {
+      setApiOnline(false);
+    }
+  };
+
   useEffect(() => {
     loadData();
+    const interval = setInterval(checkHealth, 15000);
+    return () => clearInterval(interval);
   }, []);
 
   const stats: StatInfo[] = [
@@ -62,6 +80,12 @@ export default function App() {
     { label: 'Vehículos', value: vehiculos.length, icon: 'fas fa-truck' },
     { label: 'Rutas activas', value: rutas.length, icon: 'fas fa-route' },
   ];
+
+  const health = {
+    api: demoMode ? ('demo' as const) : apiOnline ? ('online' as const) : ('offline' as const),
+    gps: 'stopped' as const,
+    realtime: 'off' as const,
+  };
 
   const openModal = (type: EntityType, id?: number) => {
     setModalType(type);
@@ -202,17 +226,17 @@ export default function App() {
 
   return (
     <div className="app-container">
-      <Header stats={stats} />
+      <Header stats={stats} health={health} />
 
       {demoMode && (
         <p
           style={{
             padding: '10px 16px',
             marginBottom: '20px',
-            background: '#fff3cd',
-            border: '1px solid #ffeaa7',
+            background: 'color-mix(in srgb, var(--warning) 18%, var(--surface))',
+            border: '1px solid color-mix(in srgb, var(--warning) 45%, var(--surface))',
             borderRadius: '8px',
-            color: '#856404',
+            color: 'var(--warning-text)',
             fontSize: '0.85rem',
           }}
         >
@@ -223,7 +247,7 @@ export default function App() {
       <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {loading ? (
-        <p style={{ padding: '40px', textAlign: 'center', color: '#5e6f82' }}>
+        <p style={{ padding: '40px', textAlign: 'center', color: 'var(--muted)' }}>
           <i className="fas fa-spinner fa-pulse"></i> Cargando datos...
         </p>
       ) : (
@@ -277,6 +301,8 @@ export default function App() {
               onDelete={(id) => handleDelete('ruta', id)}
             />
           )}
+
+          {activeTab === 'gps' && <GpsPage />}
         </>
       )}
 
