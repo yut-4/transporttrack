@@ -159,7 +159,7 @@ export default function App() {
       await loadData();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Error desconocido';
-      alert('⚠️ ' + msg);
+      alert('Error: ' + msg);
     }
   };
 
@@ -188,7 +188,7 @@ export default function App() {
       await loadData();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Error desconocido';
-      alert('⚠️ ' + msg);
+      alert('Error: ' + msg);
     }
   };
 

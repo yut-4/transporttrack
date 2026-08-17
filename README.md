@@ -1,4 +1,4 @@
-# TransportTrack 🚚
+# TransportTrack
 
 **Sistema de Gestión de Flotas de Transporte** - Proyecto final de Programación Orientada a Objetos.
 
@@ -6,7 +6,7 @@ Aplicación web completa para administrar **conductores**, **vehículos** y **ru
 
 ---
 
-## 🏗️ Arquitectura
+## Arquitectura
 
 | Capa | Proyecto | Tecnología |
 |------|----------|------------|
@@ -25,7 +25,7 @@ TransportTrack.Web (React)  ──HTTP/REST──►  TransportTrack.Api  ──
 
 ---
 
-## ✨ Funcionalidades
+## Funcionalidades
 
 - **CRUD de Conductores**: nombre, licencia única, teléfono
 - **CRUD de Vehículos**: placa única, marca, modelo, año, asignación a conductor
@@ -38,7 +38,7 @@ TransportTrack.Web (React)  ──HTTP/REST──►  TransportTrack.Api  ──
 
 ---
 
-## 📐 Conceptos POO Aplicados
+## Conceptos POO Aplicados
 
 | Concepto | Implementación |
 |----------|----------------|
@@ -54,7 +54,7 @@ Documentación completa: [docs/requerimientos.md](docs/requerimientos.md) · [do
 
 ---
 
-## 🚀 Cómo ejecutar
+## Cómo ejecutar
 
 ### Requisitos
 - .NET 10 SDK (o superior)
@@ -85,7 +85,7 @@ npm run dev
 
 ---
 
-## ☁️ Despliegue en Netlify
+## Despliegue en Netlify
 
 ### Opción A: Deploy manual (arrastrar y soltar)
 
@@ -109,7 +109,7 @@ La configuración ya está incluida en [`TransportTrack.Web/netlify.toml`](Trans
 
 ---
 
-## 📡 Endpoints API
+## Endpoints API
 
 ### Conductores `/api/conductores`
 | Método | Endpoint | Descripción |
@@ -140,7 +140,7 @@ La configuración ya está incluida en [`TransportTrack.Web/netlify.toml`](Trans
 
 ---
 
-## 🗂️ Estructura del Repositorio
+## Estructura del Repositorio
 
 ```
 transporttrack/
@@ -176,7 +176,7 @@ transporttrack/
 
 ---
 
-## 🛠️ Herramientas de Desarrollo
+## Herramientas de Desarrollo
 
 | Herramienta | Comando |
 |-------------|---------|
@@ -189,6 +189,6 @@ transporttrack/
 
 ---
 
-## 👨‍💻 Autor
+## Autor
 
 Proyecto académico - Programación Orientada a Objetos
