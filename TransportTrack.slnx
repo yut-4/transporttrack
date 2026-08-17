@@ -3,4 +3,5 @@
   <Project Path="TransportTrack.Application/TransportTrack.Application.csproj" />
   <Project Path="TransportTrack.Domain/TransportTrack.Domain.csproj" />
   <Project Path="TransportTrack.Infrastructure/TransportTrack.Infrastructure.csproj" />
+  <Project Path="TransportTrack.Tests/TransportTrack.Tests.csproj" />
 </Solution>
