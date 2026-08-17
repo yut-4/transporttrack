@@ -6,8 +6,9 @@ using TransportTrack.Infrastructure.Models;
 
 namespace TransportTrack.Api.Controllers;
 
-[ApiController, Route("api/[controller]")]
-public sealed class VehiculosController(IVehicleService service) : ControllerBase
+[ApiController]
+[Route("api/[controller]")]
+public class VehiculosController : ControllerBase
 {
     private readonly IVehiculoService _vehiculoService;
 
@@ -24,7 +25,7 @@ public sealed class VehiculosController(IVehicleService service) : ControllerBas
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<VehicleDto>> GetById(int id)
+    public async Task<ActionResult<VehiculoDto>> GetVehiculo(int id)
     {
         var vehiculo = await _vehiculoService.GetByIdAsync(id);
 
@@ -37,7 +38,7 @@ public sealed class VehiculosController(IVehicleService service) : ControllerBas
     }
 
     [HttpPost]
-    public async Task<ActionResult<VehicleDto>> Create(CreateVehicleDto dto)
+    public async Task<ActionResult<VehiculoDto>> CrearVehiculo(VehiculoModel model)
     {
         try
         {
@@ -57,7 +58,7 @@ public sealed class VehiculosController(IVehicleService service) : ControllerBas
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, UpdateVehicleDto dto)
+    public async Task<IActionResult> ActualizarVehiculo(int id, VehiculoModel model)
     {
         try
         {
@@ -75,7 +76,7 @@ public sealed class VehiculosController(IVehicleService service) : ControllerBas
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> EliminarVehiculo(int id)
     {
         try
         {

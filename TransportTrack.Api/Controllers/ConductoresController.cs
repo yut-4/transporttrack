@@ -6,8 +6,9 @@ using TransportTrack.Infrastructure.Models;
 
 namespace TransportTrack.Api.Controllers;
 
-[ApiController, Route("api/[controller]")]
-public sealed class ConductoresController(IConductorService service) : ControllerBase
+[ApiController]
+[Route("api/[controller]")]
+public class ConductoresController : ControllerBase
 {
     private readonly IConductorService _conductorService;
 
@@ -24,7 +25,7 @@ public sealed class ConductoresController(IConductorService service) : Controlle
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<ConductorDto>> GetById(int id)
+    public async Task<ActionResult<ConductorDto>> GetConductor(int id)
     {
         var conductor = await _conductorService.GetByIdAsync(id);
 
@@ -37,7 +38,7 @@ public sealed class ConductoresController(IConductorService service) : Controlle
     }
 
     [HttpPost]
-    public async Task<ActionResult<ConductorDto>> Create(CreateConductorDto dto)
+    public async Task<ActionResult<ConductorDto>> CrearConductor(ConductorModel model)
     {
         try
         {
@@ -53,7 +54,7 @@ public sealed class ConductoresController(IConductorService service) : Controlle
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, UpdateConductorDto dto)
+    public async Task<IActionResult> ActualizarConductor(int id, ConductorModel model)
     {
         try
         {
@@ -67,7 +68,7 @@ public sealed class ConductoresController(IConductorService service) : Controlle
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> EliminarConductor(int id)
     {
         try
         {
