@@ -26,6 +26,8 @@ function intParam(value: string | null | undefined): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+export const config = { path: '/api/*' };
+
 export default async function handler(req: Request): Promise<Response> {
   if (req.method === 'OPTIONS') {
     return json(204, null);

@@ -117,7 +117,7 @@ Arrastra la carpeta `TransportTrack.Web/dist` a la consola de Netlify.
 2. En Netlify: **Add new site → Import an existing project → GitHub**
 3. Selecciona el repositorio y pulsa **Deploy** (no hay que configurar nada más)
 
-La configuración está en [`netlify.toml`](netlify.toml) en la raíz del repo: Netlify construye `TransportTrack.Web` (base) con `npm run build`, publica `dist`, despliega la API serverless en `netlify/functions` y añade el redirect SPA. Solo necesitas `npm` y el `package-lock.json` ya versionado.
+La configuración está en [`netlify.toml`](netlify.toml) en la raíz del repo: Netlify construye `TransportTrack.Web` (base) con `npm run build`, publica `dist`, despliega la API serverless en `netlify/functions` (con enrutado propio `/api/*`) y añade el redirect SPA. Solo necesitas `npm` y el `package-lock.json` ya versionado.
 
 ### Demo full-Netlify (sin backend .NET)
 
@@ -126,7 +126,7 @@ El repositorio incluye una demo completa ejecutándose solo en Netlify:
 - **API serverless**: `TransportTrack.Web/netlify/functions` implementa el mismo contrato REST que la API .NET (conductores, vehículos, rutas y tracking: emparejar dispositivo, sesiones, pings, live, historial) con datos semilla.
 - **Almacenamiento dual**: usa **Netlify Database (Postgres)** automáticamente cuando está disponible; si no, cae a **Netlify Blobs** (zero-config). No hace falta configurar nada.
 - **Sin SignalR**: el live se actualiza por polling (10s).
-- El frontend usa URLs relativas (`/api/...`), así que en Netlify las peticiones las resuelve el redirect a la función automáticamente, sin variables de entorno. En local se fuerza el modo demo con `VITE_USE_NETLIFY_DEMO=true`.
+- El frontend usa URLs relativas (`/api/...`), que Netlify enruta directamente a la función serverless, sin variables de entorno. En local se fuerza el modo demo con `VITE_USE_NETLIFY_DEMO=true`.
 
 ```bash
 cd TransportTrack.Web
